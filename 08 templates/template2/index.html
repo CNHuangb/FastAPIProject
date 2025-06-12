@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <p>用户名:{{ user|upper }}</p>
+
+    <p>pai:{{ pai|round(3) }}</p>
+
+
+    <p>影视区</p>
+
+    {% if age > 18 %}
+
+    <ul>
+        <li>
+            日韩
+        </li>
+        <li>
+            欧美
+        </li>
+        <li>
+            国产
+        </li>
+    </ul>
+
+    {% else %}
+
+    <ul>
+        <li>
+            黑猫警长
+        </li>
+        <li>
+            葫芦兄弟
+        </li>
+        <li>
+            喜洋洋与灰太狼
+        </li>
+    </ul>
+
+    {% endif %}
+
+
+
+    <ul>
+        <li>
+            {{ books.0 }}
+        </li>
+        <li>
+            {{ books.1 }}
+        </li>
+        <li>
+            {{ books.2 }}
+        </li>
+        <li>
+            {{ books.3 }}
+        </li>
+    </ul>
+
+    <ul>
+        <li>
+            {{ books }}
+        </li>
+    </ul>
+
+    <ul>
+        {% for book in books %}
+            <li>
+            {{ book }}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    
+
+</body>
+</html>
