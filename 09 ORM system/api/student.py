@@ -9,6 +9,8 @@ from fastapi import Request
 
 from pydantic import BaseModel,Field,validator
 
+from fastapi.exceptions import HTTPException
+
 
 student_api = APIRouter()
 
@@ -140,25 +142,42 @@ async def addStudent(student_in:StudentIn):
 
 
 @student_api.get("/{student_id}")
-def getOneStudent(student_id:int):
+async def getOneStudent(student_id:int):
 
-    return {
+    student = await Studendt.get(id = student_id)
 
-        "操作":f"查看ID={student_id}的学生"
-    }
+    return student
 
 
 @student_api.put("/{student_id}")
-def updateStudent(student_id:int):
+async def updateStudent(student_id:int, student_in: StudentIn):
 
-    return {
+    data = student_in.dict()
+    print ("data",data)
 
-        "操作":f"更新ID={student_id}的学生"
-    }
+    course = data.pop("course")
+
+    await Studendt.filter(id=student_id).update(**data)
+
+    # 设置多对多的课程
+    edit_student = await Studendt.get(id=student_id)
+    
+    choose_course = await Course.filter(id__in=course)
+
+    await edit_student.course.clear()
+    await edit_student.course.add(*choose_course)
 
 
-@student_api.delete("/{student_id}")
-def deleteStudent(student_id:int):
+    return edit_student
+
+
+@student_api.delete("/{student_id}") 
+async def deleteStudent(student_id:int):
+
+    deleteCount = await Studendt.filter(id=student_id).delete()
+
+    if not deleteCount:
+        raise HTTPException(status_code=404, detail=f"主键为{student_id}的学生不存在")
 
     return {
 
